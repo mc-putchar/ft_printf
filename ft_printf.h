@@ -31,7 +31,7 @@
 typedef struct s_format
 {
 	int		width;
-	int		precision;
+	int		prec;
 	int		specifier;
 	int		flags;
 	union
@@ -46,7 +46,7 @@ typedef struct s_format
 typedef char	*(*t_converter)(struct s_format *);
 
 int		ft_printf(const char *format, ...);
-int		ft_printf_char(t_format *fmt);
+char	*ft_printf_char(t_format *fmt);
 char	*ft_printf_int(t_format *fmt);
 char	*ft_printf_uint(t_format *fmt);
 char	*ft_printf_str(t_format *fmt);
@@ -54,9 +54,14 @@ char	*ft_printf_ptr(t_format *fmt);
 char	*ft_printf_hex(t_format *fmt);
 char	*ft_printf_uhex(t_format *fmt);
 
+int		ft_printf_handle_flags(t_format *f);
+int		ft_printf_char_flags(t_format *f);
+char	*zero_padding(char *pad, t_format *f);
+
 int		ft_print(const char *str, int s, int e);
 int		indexof(char c, char *str);
 int		get_min_width(const char *fmt, int *i);
 int		get_precision(const char *fmt, int *i);
+char	*gen_padding(int c, int n);
 
 #endif

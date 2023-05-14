@@ -30,6 +30,19 @@ static int	parse_flags(const char *fmt, int *i)
 	return (flags);
 }
 
+static t_format	*init_format(void)
+{
+	t_format	*fmt;
+
+	fmt = malloc(sizeof(t_format));
+	if (!fmt)
+		return (NULL);
+	fmt->flags = 0;
+	fmt->width = 0;
+	fmt->prec = -1;
+	return (fmt);
+}
+
 /*
 **	This function parses the format string, moving the index along
 **	to the specifier at the end.
@@ -43,7 +56,7 @@ static t_format	*parse_format(const char *fmt, int *i)
 	t_format	*f;
 	int			j;
 
-	f = malloc(sizeof(t_format));
+	f = init_format();
 	if (!f)
 		return (NULL);
 	if (fmt[*i])
@@ -52,7 +65,7 @@ static t_format	*parse_format(const char *fmt, int *i)
 		if (ft_isdigit(fmt[*i]))
 			f->width = get_min_width(fmt, i);
 		if (fmt[*i] == '.')
-			f->precision = get_precision(fmt, i);
+			f->prec = get_precision(fmt, i);
 		j = indexof(fmt[*i], FT_PRINTF_SPECIFIERS);
 		if (j != -1)
 			return (f->specifier = j, f);
@@ -62,9 +75,9 @@ static t_format	*parse_format(const char *fmt, int *i)
 
 int	ft_printf_format(t_format *f, va_list ap)
 {
-	static t_converter	con[PRINTF_CONVERTERS] = {&ft_printf_int, \
-	&ft_printf_int, &ft_printf_uint, &ft_printf_hex, &ft_printf_uhex, \
-	&ft_printf_str, &ft_printf_ptr};
+	static t_converter	con[PRINTF_CONVERTERS] = {&ft_printf_char, \
+	&ft_printf_int, &ft_printf_int, &ft_printf_uint, &ft_printf_hex, \
+	&ft_printf_uhex, &ft_printf_str, &ft_printf_ptr};
 	int					c;
 
 	if (!f || !ap)
@@ -77,13 +90,13 @@ int	ft_printf_format(t_format *f, va_list ap)
 		f->u_arg.ui = (unsigned int)va_arg(ap, unsigned int);
 	else
 		f->u_arg.i = va_arg(ap, int);
-	if (f->specifier == 1)
-		return (ft_printf_char(f));
-	f->out = con[f->specifier - 2](f);
+	f->out = con[f->specifier - 1](f);
 	if (!f->out)
 		return (0);
-	ft_printf_handle_flags(f);
-	c = ft_print(f->out, 0, ft_strlen(f->out));
+	if (f->specifier == 1)
+		c = ft_printf_char_flags(f);
+	else
+		c = ft_printf_handle_flags(f);
 	free(f->out);
 	return (c);
 }

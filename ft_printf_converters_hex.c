@@ -27,7 +27,7 @@ static int	count_udigits(unsigned long long n)
 	return (d);
 }
 
-static char	*convert_to_hex(unsigned long long n, int off)
+static char	*to_hex(unsigned long long n, int off)
 {
 	char	*hex;
 	int		i;
@@ -52,39 +52,70 @@ static char	*convert_to_hex(unsigned long long n, int off)
 char	*ft_printf_ptr(t_format *fmt)
 {
 	char	*str;
-	char	*addr;
 
 	if (!fmt->u_arg.p)
 	{
 		str = ft_strdup("(nil)");
 		return (str);
 	}
-	str = convert_to_hex((unsigned long long)fmt->u_arg.p, HEX_OFF_TO_LOWER);
+	str = to_hex((unsigned long long)fmt->u_arg.p, HEX_OFF_TO_LOWER);
 	if (!str)
 		return (str);
-	addr = malloc(ft_strlen(str) + 3);
-	if (!addr)
-		return (free(str), addr);
-	addr[0] = '0';
-	addr[1] = 'x';
-	addr[2] = 0;
-	ft_strlcat(addr, str, ft_strlen(str) + 3);
+	fmt->out = ft_strjoin("0x", str);
 	free(str);
-	return (addr);
+	return (fmt->out);
 }
 
 char	*ft_printf_hex(t_format *fmt)
 {
 	char	*str;
+	char	*pad;
+	char	*tmp;
+	int		len;
 
-	str = convert_to_hex(fmt->u_arg.ui, HEX_OFF_TO_LOWER);
-	return (str);
+	fmt->out = to_hex(fmt->u_arg.ui, HEX_OFF_TO_LOWER);
+	if (!fmt->out)
+		return (NULL);
+	len = fmt->prec - ft_strlen(fmt->out);
+	if (len > 0)
+	{
+		pad = gen_padding('0', len);
+		tmp = zero_padding(pad, fmt);
+		free(fmt->out);
+		free(pad);
+		fmt->out = tmp;
+	}
+	if (fmt->flags & (1 << 2) && fmt->u_arg.ui)
+	{
+		str = ft_strjoin("0x", fmt->out);
+		return (free(fmt->out), fmt->out = str);
+	}
+	return (fmt->out);
 }
 
 char	*ft_printf_uhex(t_format *fmt)
 {
 	char	*str;
+	char	*pad;
+	char	*tmp;
+	int		len;
 
-	str = convert_to_hex(fmt->u_arg.ui, HEX_OFF_TO_UPPER);
-	return (str);
+	fmt->out = to_hex(fmt->u_arg.ui, HEX_OFF_TO_UPPER);
+	if (!fmt->out)
+		return (NULL);
+	len = fmt->prec - ft_strlen(fmt->out);
+	if (len > 0)
+	{
+		pad = gen_padding('0', len);
+		tmp = zero_padding(pad, fmt);
+		free(fmt->out);
+		free(pad);
+		fmt->out = tmp;
+	}
+	if (fmt->flags & (1 << 2) && fmt->u_arg.ui)
+	{
+		str = ft_strjoin("0X", fmt->out);
+		return (free(fmt->out), fmt->out = str);
+	}
+	return (fmt->out);
 }
