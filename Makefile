@@ -6,7 +6,7 @@
 #    By: mcutura <mcutura@student.42berlin.de>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/05 17:16:43 by mcutura           #+#    #+#              #
-#    Updated: 2023/05/08 19:46:01 by mcutura          ###   ########.fr        #
+#    Updated: 2023/05/18 13:54:34 by mcutura          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,10 +17,11 @@ FILES := ft_printf.c ft_printf_utils.c ft_printf_converters.c \
 OBJS := $(FILES:%.c=%.o)
 HEADERS := ft_printf.h libft/libft.h
 CFLAGS := -Wall -Wextra -Werror
-ARFLAGS := crsT
+ARFLAGS := rcs
 
 $(NAME): $(LIBFT) $(OBJS) $(HEADERS)
-	$(AR) $(ARFLAGS) $(NAME) $(OBJS) $(LIBFT)
+	cp -a $(LIBFT) $(NAME)
+	$(AR) $(ARFLAGS) $(NAME) $(OBJS)
 
 $(LIBFT):
 	$(MAKE) -C libft all
@@ -40,4 +41,4 @@ fclean:
 
 re: fclean all
 
-.PHONY: all clean bonus fclean re debug test
+.PHONY: all bonus clean fclean re
