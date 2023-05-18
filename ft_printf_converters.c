@@ -47,6 +47,8 @@ char	*ft_printf_uint(t_format *fmt)
 	int		len;
 
 	fmt->out = ft_uitoa(fmt->u_arg.ui);
+	if (!fmt->prec && fmt->out[0] == '0')
+		fmt->out[0] = 0;
 	if (fmt->prec > (int)ft_strlen(fmt->out))
 	{
 		len = fmt->prec - ft_strlen(fmt->out);

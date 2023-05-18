@@ -75,6 +75,8 @@ char	*ft_printf_hex(t_format *fmt)
 	fmt->out = to_hex(fmt->u_arg.ui, HEX_OFF_TO_LOWER);
 	if (!fmt->out)
 		return (NULL);
+	if (!fmt->prec && fmt->out[0] == '0')
+		fmt->out[0] = 0;
 	len = fmt->prec - ft_strlen(fmt->out);
 	if (len > 0)
 	{
@@ -99,6 +101,8 @@ char	*ft_printf_uhex(t_format *fmt)
 	fmt->out = to_hex(fmt->u_arg.ui, HEX_OFF_TO_UPPER);
 	if (!fmt->out)
 		return (NULL);
+	if (!fmt->prec && fmt->out[0] == '0')
+		fmt->out[0] = 0;
 	len = fmt->prec - ft_strlen(fmt->out);
 	if (len > 0)
 	{
