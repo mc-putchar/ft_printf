@@ -81,7 +81,7 @@ char	*ft_printf_str(t_format *fmt)
 {
 	if (!fmt->u_arg.p)
 	{
-		if (fmt->prec == -1)
+		if (fmt->prec)
 			return (fmt->out = ft_strdup("(null)"));
 		else
 			return (fmt->out = ft_strdup(""));
