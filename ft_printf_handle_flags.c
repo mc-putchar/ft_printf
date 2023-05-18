@@ -12,21 +12,25 @@
 
 #include "ft_printf.h"
 
-char	*zero_padding(char *pad, t_format *f)
+char	*zero_padding(t_format *f, int len)
 {
 	char	*str;
 	char	*tmp;
+	char	*pad;
 
+	pad = gen_padding('0', len);
+	if (!pad)
+		return (NULL);
 	if (f->out[0] == '-')
 	{
 		tmp = ft_strjoin("-", pad);
 		if (!tmp)
-			return (NULL);
+			return (free(pad), NULL);
 		str = ft_strjoin(tmp, f->out + 1);
-		return (free(tmp), str);
+		return (free(pad), free(tmp), str);
 	}
 	str = ft_strjoin(pad, f->out);
-	return (str);
+	return (free(pad), str);
 }
 
 int	ft_printf_handle_flags(t_format *f)
@@ -35,6 +39,7 @@ int	ft_printf_handle_flags(t_format *f)
 	char	*str;
 
 	str = NULL;
+	tmp = NULL;
 	if (f->width <= (int)ft_strlen(f->out))
 		return (ft_print(f->out, 0, ft_strlen(f->out)));
 	if (f->flags & 1)
@@ -43,19 +48,17 @@ int	ft_printf_handle_flags(t_format *f)
 		str = ft_strjoin(f->out, tmp);
 	}
 	else if (f->flags & (1 << 1) && f->prec < 0 && f->specifier < 7)
-	{
-		tmp = gen_padding('0', f->width - ft_strlen(f->out));
-		str = zero_padding(tmp, f);
-	}
+		str = zero_padding(f, f->width - ft_strlen(f->out));
 	else
 	{
 		tmp = gen_padding(' ', f->width - ft_strlen(f->out));
 		str = ft_strjoin(tmp, f->out);
 	}
-	if (!str)
-		return (ft_print(f->out, 0, ft_strlen(f->out)));
-	free(tmp);
-	return (free(f->out), ft_print(f->out = str, 0, ft_strlen(f->out)));
+	if (tmp)
+		free(tmp);
+	free(f->out);
+	f->out = str;
+	return (ft_print(f->out, 0, ft_strlen(f->out)));
 }
 
 int	ft_printf_char_flags(t_format *f)

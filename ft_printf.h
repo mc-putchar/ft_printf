@@ -56,7 +56,7 @@ char	*ft_printf_uhex(t_format *fmt);
 
 int		ft_printf_handle_flags(t_format *f);
 int		ft_printf_char_flags(t_format *f);
-char	*zero_padding(char *pad, t_format *f);
+char	*zero_padding(t_format *f, int len);
 
 int		ft_print(const char *str, int s, int e);
 int		indexof(char c, char *str);

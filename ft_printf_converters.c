@@ -14,7 +14,6 @@
 
 char	*ft_printf_int(t_format *fmt)
 {
-	char	*pad;
 	char	*tmp;
 	int		len;
 
@@ -24,10 +23,8 @@ char	*ft_printf_int(t_format *fmt)
 		++len;
 	if (len > 0)
 	{
-		pad = gen_padding('0', len);
-		tmp = zero_padding(pad, fmt);
+		tmp = zero_padding(fmt, len);
 		free(fmt->out);
-		free(pad);
 		fmt->out = tmp;
 	}
 	if (fmt->u_arg.i < 0)

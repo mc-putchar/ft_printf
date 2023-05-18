@@ -69,7 +69,6 @@ char	*ft_printf_ptr(t_format *fmt)
 char	*ft_printf_hex(t_format *fmt)
 {
 	char	*str;
-	char	*pad;
 	char	*tmp;
 	int		len;
 
@@ -79,10 +78,8 @@ char	*ft_printf_hex(t_format *fmt)
 	len = fmt->prec - ft_strlen(fmt->out);
 	if (len > 0)
 	{
-		pad = gen_padding('0', len);
-		tmp = zero_padding(pad, fmt);
+		tmp = zero_padding(fmt, len);
 		free(fmt->out);
-		free(pad);
 		fmt->out = tmp;
 	}
 	if (fmt->flags & (1 << 2) && fmt->u_arg.ui)
@@ -96,7 +93,6 @@ char	*ft_printf_hex(t_format *fmt)
 char	*ft_printf_uhex(t_format *fmt)
 {
 	char	*str;
-	char	*pad;
 	char	*tmp;
 	int		len;
 
@@ -106,10 +102,8 @@ char	*ft_printf_uhex(t_format *fmt)
 	len = fmt->prec - ft_strlen(fmt->out);
 	if (len > 0)
 	{
-		pad = gen_padding('0', len);
-		tmp = zero_padding(pad, fmt);
+		tmp = zero_padding(fmt, len);
 		free(fmt->out);
-		free(pad);
 		fmt->out = tmp;
 	}
 	if (fmt->flags & (1 << 2) && fmt->u_arg.ui)
