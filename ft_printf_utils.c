@@ -47,12 +47,14 @@ int	get_precision(const char *fmt, int *i)
 	int	reset;
 
 	precision = 0;
-	reset = 1;
+	reset = 0;
 	if (fmt[(*i) + 1] == '-')
-		reset = 0;
+		reset = -1;
 	while (ft_isdigit(fmt[++(*i)]))
 		precision = precision * 10 + fmt[*i] - '0';
-	return (reset * precision);
+	if (reset)
+		return (reset);
+	return (precision);
 }
 
 char	*gen_padding(int c, int n)

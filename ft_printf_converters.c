@@ -18,6 +18,8 @@ char	*ft_printf_int(t_format *fmt)
 	int		len;
 
 	fmt->out = ft_itoa(fmt->u_arg.i);
+	if (!fmt->prec && fmt->out[0] == '0')
+		fmt->out[0] = 0;
 	len = fmt->prec - ft_strlen(fmt->out);
 	if (fmt->out[0] == '-')
 		++len;
@@ -76,7 +78,12 @@ char	*ft_printf_char(t_format *fmt)
 char	*ft_printf_str(t_format *fmt)
 {
 	if (!fmt->u_arg.p)
-		return (fmt->out = ft_strdup("(null)"));
+	{
+		if (fmt->prec == -1)
+			return (fmt->out = ft_strdup("(null)"));
+		else
+			return (fmt->out = ft_strdup(""));
+	}
 	fmt->out = ft_strdup((const char *)fmt->u_arg.p);
 	if (!fmt->out)
 		return (NULL);
