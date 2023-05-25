@@ -14,7 +14,22 @@
 
 int	ft_print(const char *str, int s, int e)
 {
-	return (write(STDOUT_FILENO, str + s, e - s));
+	int	ret;
+	int	printed;
+	int	remain;
+
+	ret = 0;
+	remain = -1;
+	while (remain)
+	{
+		printed = write(STDOUT_FILENO, str + s, e - s);
+		if (printed == -1)
+			continue ;
+		remain = e - s - printed;		
+		ret += printed;
+		s += printed;
+	}
+	return (ret);
 }
 
 int	indexof(char c, char *str)

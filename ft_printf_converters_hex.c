@@ -51,18 +51,18 @@ static char	*to_hex(unsigned long long n, int off)
 
 char	*ft_printf_ptr(t_format *fmt)
 {
-	char	*str;
+	char	*tmp;
 
 	if (!fmt->u_arg.p)
 	{
-		str = ft_strdup("(nil)");
-		return (str);
+		fmt->out = ft_strdup("(nil)");
+		return (fmt->out);
 	}
-	str = to_hex((unsigned long long)fmt->u_arg.p, HEX_OFF_TO_LOWER);
-	if (!str)
-		return (str);
-	fmt->out = ft_strjoin("0x", str);
-	free(str);
+	tmp = to_hex((unsigned long long)fmt->u_arg.p, HEX_OFF_TO_LOWER);
+	if (!tmp)
+		return (NULL);
+	fmt->out = ft_strjoin("0x", tmp);
+	free(tmp);
 	return (fmt->out);
 }
 
@@ -117,3 +117,4 @@ char	*ft_printf_uhex(t_format *fmt)
 	}
 	return (fmt->out);
 }
+
