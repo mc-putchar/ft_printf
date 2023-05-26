@@ -73,34 +73,6 @@ static t_format	*parse_format(const char *fmt, int *i)
 	return (NULL);
 }
 
-int	ft_printf_format(t_format *f, va_list ap)
-{
-	static t_converter	con[PRINTF_CONVERTERS] = {&ft_printf_char, \
-	&ft_printf_int, &ft_printf_int, &ft_printf_uint, &ft_printf_hex, \
-	&ft_printf_uhex, &ft_printf_str, &ft_printf_ptr};
-	int					c;
-
-	if (!f || !ap)
-		return (0);
-	if (!(f->specifier))
-		return (write(STDOUT_FILENO, &"%", 1));
-	if (f->specifier > 6)
-		f->u_arg.p = va_arg(ap, void *);
-	else if (f->specifier > 3)
-		f->u_arg.ui = (unsigned int)va_arg(ap, unsigned int);
-	else
-		f->u_arg.i = va_arg(ap, int);
-	f->out = con[f->specifier - 1](f);
-	if (!f->out)
-		return (0);
-	if (f->specifier == 1)
-		c = ft_printf_char_flags(f);
-	else
-		c = ft_printf_handle_flags(f);
-	free(f->out);
-	return (c);
-}
-
 int	ft_printf(const char *format, ...)
 {
 	int			c;
@@ -118,14 +90,43 @@ int	ft_printf(const char *format, ...)
 		if (format[i] == '%')
 		{
 			if (i++ > s)
-				c += ft_print(format, s, i - 1);
+				c += ft_print(format, s, i - 1, STDOUT_FILENO);
 			f = parse_format(format, &i);
-			c += ft_printf_format(f, ap);
+			c += ft_printf_format(f, ap, STDOUT_FILENO);
 			free(f);
 			s = i + 1;
 		}
 	}
 	if (i > s)
-		c += ft_print(format, s, i);
+		c += ft_print(format, s, i, STDOUT_FILENO);
+	return (va_end(ap), c);
+}
+
+int	ft_fprintf(int fd, const char *format, ...)
+{
+	int			c;
+	int			s;
+	int			i;
+	va_list		ap;
+	t_format	*f;
+
+	c = 0;
+	i = -1;
+	s = 0;
+	va_start(ap, format);
+	while (format[++i])
+	{
+		if (format[i] == '%')
+		{
+			if (i++ > s)
+				c += ft_print(format, s, i - 1, fd);
+			f = parse_format(format, &i);
+			c += ft_printf_format(f, ap, fd);
+			free(f);
+			s = i + 1;
+		}
+	}
+	if (i > s)
+		c += ft_print(format, s, i, fd);
 	return (va_end(ap), c);
 }

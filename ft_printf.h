@@ -13,7 +13,7 @@
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-# include "libft/libft.h"
+# include "libft.h"
 # include <stdarg.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -46,6 +46,8 @@ typedef struct s_format
 typedef char	*(*t_converter)(struct s_format *);
 
 int		ft_printf(const char *format, ...);
+int		ft_fprintf(int fd, const char *format, ...);
+
 char	*ft_printf_char(t_format *fmt);
 char	*ft_printf_int(t_format *fmt);
 char	*ft_printf_uint(t_format *fmt);
@@ -54,11 +56,12 @@ char	*ft_printf_ptr(t_format *fmt);
 char	*ft_printf_hex(t_format *fmt);
 char	*ft_printf_uhex(t_format *fmt);
 
-int		ft_printf_handle_flags(t_format *f);
-int		ft_printf_char_flags(t_format *f);
+int		ft_printf_format(t_format *f, va_list ap, int fd);
+int		ft_printf_handle_flags(t_format *f, int fd);
+int		ft_printf_char_flags(t_format *f, int fd);
 char	*zero_padding(t_format *f, int len);
 
-int		ft_print(const char *str, int s, int e);
+int		ft_print(const char *str, int s, int e, int fd);
 int		indexof(char c, char *str);
 int		get_min_width(const char *fmt, int *i);
 int		get_precision(const char *fmt, int *i);

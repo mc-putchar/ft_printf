@@ -24,6 +24,7 @@ $(NAME): $(LIBFT) $(OBJS) $(HEADERS)
 	$(AR) $(ARFLAGS) $(NAME) $(OBJS)
 
 $(LIBFT):
+	cp libft/libft.h libft.h
 	$(MAKE) -C libft all
 
 all: $(NAME)

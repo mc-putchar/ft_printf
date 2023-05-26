@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-int	ft_print(const char *str, int s, int e)
+int	ft_print(const char *str, int s, int e, int fd)
 {
 	int	ret;
 	int	printed;
@@ -22,7 +22,7 @@ int	ft_print(const char *str, int s, int e)
 	remain = -1;
 	while (remain)
 	{
-		printed = write(STDOUT_FILENO, str + s, e - s);
+		printed = write(fd, str + s, e - s);
 		if (printed == -1)
 			continue ;
 		remain = e - s - printed;		
